@@ -20,8 +20,8 @@ public class ChamadoController {
     @GetMapping("/{id}")
     public Chamado buscarPorId(@PathVariable Long id) {return chamadoService.buscarPorId(id);}
 
-    @PostMapping("/{idCliente}")
-    public Chamado salvar(@RequestBody Chamado chamado, @PathVariable Long idCliente) {return chamadoService.salvar(chamado, idCliente);}
+    @PostMapping()
+    public Chamado salvar(@RequestBody Chamado chamado, @RequestParam Long idCliente) {return chamadoService.salvar(chamado, idCliente);}
 
     @DeleteMapping("/{id}")
     public void remover(@PathVariable Long id) {chamadoService.remover(id);}

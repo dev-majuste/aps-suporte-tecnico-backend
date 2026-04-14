@@ -3,6 +3,8 @@ package com.majuste.suportetecnico.servicos;
 import com.majuste.suportetecnico.model.entidades.Chamado;
 import com.majuste.suportetecnico.model.entidades.Mensagem;
 import com.majuste.suportetecnico.model.entidades.Usuario;
+import com.majuste.suportetecnico.model.enums.Cargo;
+import com.majuste.suportetecnico.model.enums.StatusChamada;
 import com.majuste.suportetecnico.repositorios.MensagemRepository;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,18 @@ public class MensagemService {
         Chamado chamado = chamadoService.buscarPorId(idChamado);
         Usuario usuario = usuarioService.buscarPorId(idUsuario);
 
+        if (usuario.getCargo() != Cargo.SURPOTE && chamado.getStatus() == StatusChamada.AGUARDANDO_TECNICO) {
+            throw new RuntimeException("Vez do cliente");
+        }
+        if (usuario.getCargo() != Cargo.CLIENTE && chamado.getStatus() == StatusChamada.AGUARDANDO_CLIENTE) {
+            throw new RuntimeException("Vez do suporte");
+        }
+
+        if (usuario.getCargo() == Cargo.CLIENTE) {
+            chamado.setStatus(StatusChamada.AGUARDANDO_TECNICO);
+        } else {
+            chamado.setStatus(StatusChamada.AGUARDANDO_CLIENTE);
+        }
         mensagem.setUsuario(usuario);
         mensagem.setChamado(chamado);
         mensagem.setMensagem(texto);

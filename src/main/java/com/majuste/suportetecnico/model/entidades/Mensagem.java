@@ -1,7 +1,6 @@
 package com.majuste.suportetecnico.model.entidades;
 
 import jakarta.persistence.*;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 
 import java.time.LocalDateTime;
 

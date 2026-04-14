@@ -10,8 +10,8 @@ public class Avaliacao {
     private Long id;
     private Integer nota;
     private String mensagem;
-    @OneToOne
-    @JoinColumn(name = "chamado_id")
+    @ManyToOne
+    @JoinColumn(name = "chamado_id", unique = true)
     private Chamado chamado;
     @ManyToOne
     @JoinColumn(name = "usuario_id")
