@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/chamados")
+@CrossOrigin("*")
 public class MensagemController {
 
     @Autowired

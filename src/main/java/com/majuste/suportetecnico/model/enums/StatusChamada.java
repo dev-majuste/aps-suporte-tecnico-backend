@@ -4,6 +4,6 @@ public enum StatusChamada {
     EM_ABERTO,
     EM_ANDAMENTO,
     AGUARDANDO_CLIENTE,
-    AGUARDANDO_TECNICO,
+    AGUARDANDO_SUPORTE,
     RESOLVIDO
 }

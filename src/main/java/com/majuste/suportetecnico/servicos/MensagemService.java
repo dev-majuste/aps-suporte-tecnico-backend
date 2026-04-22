@@ -29,10 +29,11 @@ public class MensagemService {
     public Mensagem enviar(Long idChamado, Long idUsuario, String texto) {
         Mensagem mensagem = new Mensagem();
 
-        Chamado chamado = chamadoService.buscarPorId(idChamado);
+        Chamado chamado = chamadoService.buscarPorId(idChamado, idUsuario);
         Usuario usuario = usuarioService.buscarPorId(idUsuario);
+        System.out.println("AAAAAAAA");
 
-        if (usuario.getCargo() != Cargo.SURPOTE && chamado.getStatus() == StatusChamada.AGUARDANDO_TECNICO) {
+        if (usuario.getCargo() != Cargo.SUPORTE && chamado.getStatus() == StatusChamada.AGUARDANDO_SUPORTE) {
             throw new RuntimeException("Vez do cliente");
         }
         if (usuario.getCargo() != Cargo.CLIENTE && chamado.getStatus() == StatusChamada.AGUARDANDO_CLIENTE) {
@@ -40,7 +41,7 @@ public class MensagemService {
         }
 
         if (usuario.getCargo() == Cargo.CLIENTE) {
-            chamado.setStatus(StatusChamada.AGUARDANDO_TECNICO);
+            chamado.setStatus(StatusChamada.AGUARDANDO_SUPORTE);
         } else {
             chamado.setStatus(StatusChamada.AGUARDANDO_CLIENTE);
         }

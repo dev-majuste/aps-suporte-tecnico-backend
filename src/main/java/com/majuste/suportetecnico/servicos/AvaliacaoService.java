@@ -33,7 +33,7 @@ public class AvaliacaoService {
     }
 
     public Avaliacao salvar(Long idChamado, Avaliacao avaliacao, Long idCliente) {
-        Chamado chamado = chamadoService.buscarPorId(idChamado);
+        Chamado chamado = chamadoService.buscarPorId(idChamado, idCliente);
         Usuario cliente = usuarioService.buscarPorId(idCliente);
 
         if (chamado.getStatus() != StatusChamada.RESOLVIDO) {

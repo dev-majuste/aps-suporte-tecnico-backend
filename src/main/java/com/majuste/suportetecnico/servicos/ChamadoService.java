@@ -3,6 +3,7 @@ package com.majuste.suportetecnico.servicos;
 import com.majuste.suportetecnico.model.entidades.Categoria;
 import com.majuste.suportetecnico.model.entidades.Chamado;
 import com.majuste.suportetecnico.model.entidades.Usuario;
+import com.majuste.suportetecnico.model.enums.Cargo;
 import com.majuste.suportetecnico.model.enums.StatusChamada;
 import com.majuste.suportetecnico.repositorios.ChamadoRepository;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,19 @@ public class ChamadoService {
     }
 
     public List<Chamado> buscarTodos() {return chamadoRepository.findAll();}
-    public Chamado buscarPorId(Long id) {return chamadoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Chamado não encontrado"));}
+
+    public List<Chamado> buscarPorUserId(Long id) {
+        return chamadoRepository.findByClienteId(id);
+    }
+
+    public Chamado buscarPorId(Long id, Long userId) {
+        Chamado chamado = chamadoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chamado não encontrado"));
+        Usuario usuario = usuarioService.buscarPorId(userId);
+        if (!usuario.getCargo().equals(Cargo.ADMIN) && !usuario.getCargo().equals(Cargo.SUPORTE) && !chamado.getCliente().getId().equals(userId)) {
+            throw new RuntimeException("Acesso negado: Este chamado não pertence a você!");
+        }
+        return chamado;}
 
     public Chamado salvar(Chamado chamadoRest, Long idCliente) {
         Chamado chamado = new Chamado();
@@ -48,7 +60,7 @@ public class ChamadoService {
     public void remover(Long id) {chamadoRepository.deleteById(id);}
 
     public Chamado atender(Long id, Long tecnicoId) {
-        Chamado chamado = buscarPorId(id);
+        Chamado chamado = buscarPorId(id, tecnicoId);
 
         Usuario tecnico = usuarioService.buscarPorId(tecnicoId);
 
@@ -64,7 +76,7 @@ public class ChamadoService {
     }
 
     public Chamado finalizar(Long id, Long tecnicoId) {
-        Chamado chamado = buscarPorId(id);
+        Chamado chamado = buscarPorId(id, tecnicoId);
 
         Usuario tecnico = usuarioService.buscarPorId(tecnicoId);
 

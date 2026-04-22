@@ -21,6 +21,8 @@ public class UsuarioService {
     public Usuario buscarPorId(Long id) {return usuarioRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));}
 
+    public Usuario buscarPorEmail(String email) {return usuarioRepository.findByEmail(email);}
+
     public Usuario salvar(Usuario usuario) {
         usuario.setCargo(Cargo.CLIENTE);
         return usuarioRepository.save(usuario);}
