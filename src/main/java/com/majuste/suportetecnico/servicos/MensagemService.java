@@ -33,7 +33,7 @@ public class MensagemService {
         Usuario usuario = usuarioService.buscarPorId(idUsuario);
         System.out.println("AAAAAAAA");
 
-        if (usuario.getCargo() != Cargo.SUPORTE && chamado.getStatus() == StatusChamada.AGUARDANDO_SUPORTE) {
+        if (usuario.getCargo() != Cargo.SUPORTE && (chamado.getStatus() == StatusChamada.AGUARDANDO_SUPORTE || chamado.getStatus() == StatusChamada.EM_ABERTO) ) {
             throw new RuntimeException("Vez do cliente");
         }
         if (usuario.getCargo() != Cargo.CLIENTE && chamado.getStatus() == StatusChamada.AGUARDANDO_CLIENTE) {
