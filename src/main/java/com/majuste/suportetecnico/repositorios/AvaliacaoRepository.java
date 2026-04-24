@@ -7,5 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AvaliacaoRepository extends JpaRepository<Avaliacao, Long> {
-    Optional<Avaliacao> findByChamadoId(Long chamadoId);
+    //O Optional<T> significa que pode ser null, exemplo: Buscar a avaliação de um chamado que ainda nao foi avaliado retornaria como null
+    Optional<Avaliacao> findByChamadoId(Long chamadoId); //Busca uma avaliação pelo id do chamado
 }

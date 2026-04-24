@@ -4,14 +4,17 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+//Decorators de entidade e tabela
 @Entity
 @Table(name = "mensagens")
 public class Mensagem {
+    //Decorator de id e do auto_increment
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String mensagem;
     private LocalDateTime data;
+    //Decorators de relacionamentos e fks
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
@@ -19,9 +22,10 @@ public class Mensagem {
     @JoinColumn(name = "chamado_id")
     private Chamado chamado;
 
-    public Mensagem() {
-    }
+    //Construtor vazio
+    public Mensagem() {}
 
+    //Getters e setters
     public Long getId() {
         return id;
     }

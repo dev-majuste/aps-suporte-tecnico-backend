@@ -2,18 +2,21 @@ package com.majuste.suportetecnico.model.entidades;
 
 import jakarta.persistence.*;
 
+//Decorators de entidade e tabela
 @Entity
 @Table(name = "categorias")
 public class Categoria {
+    //Id e auto_infcrement
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String descricao;
 
-    public Categoria() {
-    }
+    //Construtor vazio
+    public Categoria() {}
 
+    //Getters e setters
     public Long getId() {
         return id;
     }

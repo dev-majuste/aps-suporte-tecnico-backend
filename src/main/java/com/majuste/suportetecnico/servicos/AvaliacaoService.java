@@ -13,6 +13,11 @@ import java.util.Objects;
 @Service
 public class AvaliacaoService {
 
+    /*
+    AVALIAÇÕES NÃO PODEM SER EXCLUIDAS E NEM EDITADAS
+     */
+
+    //Injeções de dependencias e construtor
     private final AvaliacaoRepository avaliacaoRepository;
     private final ChamadoService chamadoService;
     private final UsuarioService usuarioService;
@@ -23,37 +28,31 @@ public class AvaliacaoService {
         this.usuarioService = usuarioService;
     }
 
+    //Metodo para buscar todas as avaliacoes
     public List<Avaliacao> buscarTodos() {return avaliacaoRepository.findAll();}
 
+    //Metodo para buscar avaliacao por id
     public Avaliacao buscarPorId(Long id) {return avaliacaoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Avaliação não encontrada"));}
 
+    //Metodo para buscar a avaliação do chamado
     public Avaliacao buscarPorChamado(Long id) {
-        return avaliacaoRepository.findByChamadoId(id).orElseThrow(() -> new RuntimeException("Nao existe avaliacao nesse chamado"));
-    }
+        return avaliacaoRepository.findByChamadoId(id)
+                .orElseThrow(() -> new RuntimeException("Nao existe avaliacao nesse chamado"));}
 
+    //Metodo para salvar/criar uma avaliação
     public Avaliacao salvar(Long idChamado, Avaliacao avaliacao, Long idCliente) {
         Chamado chamado = chamadoService.buscarPorId(idChamado, idCliente);
-        Usuario cliente = usuarioService.buscarPorId(idCliente);
+        Usuario usuario = usuarioService.buscarPorId(idCliente);
 
         if (chamado.getStatus() != StatusChamada.RESOLVIDO) {
-            throw new RuntimeException("Você so pode avaliar chamados já resolvidos");
+            throw new RuntimeException("Chamado ainda não resolvido");
         }
         if (avaliacaoRepository.findByChamadoId(idChamado).isPresent()) {
-            throw new RuntimeException("Ja existe uma avaliação nesse chamado");
+            throw new RuntimeException("Esse chamado ja foi avaliado");
         }
-        if (!Objects.equals(chamado.getCliente().getId(), idChamado)) {
-            throw new RuntimeException("Você não pode avaliar chamados de outras pessoas");
-        }
-
         avaliacao.setChamado(chamado);
-        avaliacao.setUsuario(cliente);
-
+        avaliacao.setUsuario(usuario);
         return avaliacaoRepository.save(avaliacao);
     }
-
-    /*
-    * POR ENQUANTO não tem metodos de atualizar, de patch ou deletar
-    * Usuario podera fazer apenas uma avaliação, sem opção de editar
-    */
 }

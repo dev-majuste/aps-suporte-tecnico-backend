@@ -4,11 +4,12 @@ import com.majuste.suportetecnico.model.enums.StatusChamada;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
+//Decoradores de entidade e tabela
 @Entity
 @Table(name = "chamados")
 public class Chamado {
+    //Id (chave pk) e o auto_incremente
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,27 +17,32 @@ public class Chamado {
     private String descricao;
     private LocalDate dataCriacao;
     private LocalDate dataResolvido;
+    //Aqui o decorator indica pro banco de dados que é um Enum e o tipo dele que deve ser armazenado no banco
     @Enumerated(EnumType.STRING)
     private StatusChamada status;
+    //Decorator indica que é uma chave estrangeira, no caso recebe um Objeto, o Jpa ja relaciona automaticamen
+    //Nesse relacionamento é 1:n, um cliente(usuario) pode estar em N chamados, mas 1 chamado pode ter 1 cliente
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    //Decorator indifca o nome da fk, o nullable significa que não pode ser nulo, por padrao ja vem como true
+    @JoinColumn(name = "cliente_id", nullable = false)
     private Usuario cliente;
     @ManyToOne
     @JoinColumn(name = "tecnico_id")
     private Usuario tecnico;
     @ManyToOne
-    @JoinColumn(name = "categoria_id")
+    @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
+    //Construtor vazio
+    public Chamado() {}
+
+    //Getters e setters
     public Categoria getCategoria() {
         return categoria;
     }
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
-    }
-
-    public Chamado() {
     }
 
     public Long getId() {

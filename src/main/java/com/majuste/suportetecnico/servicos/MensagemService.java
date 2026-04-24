@@ -14,6 +14,7 @@ import java.util.List;
 @Service
 public class MensagemService {
 
+    //Injeção de dependencias e construtor
     private final MensagemRepository mensagemRepository;
     private final ChamadoService chamadoService;
     private final UsuarioService usuarioService;
@@ -24,32 +25,35 @@ public class MensagemService {
         this.usuarioService = usuarioService;
     }
 
-    public List<Mensagem> buscarPorChamado(Long id) {return mensagemRepository.findByChamadoId(id);}
+    //Metodo para buscar todas as mensagens
+    public List<Mensagem> buscarTodos() {
+        return mensagemRepository.findAll();
+    }
 
+    //Metodo para buscar as mensagens por chamado
+    public List<Mensagem> buscarPorChamado(Long id) {
+        return mensagemRepository.findByChamadoId(id);
+    }
+
+    //Metodo para enviar a mensagem
     public Mensagem enviar(Long idChamado, Long idUsuario, String texto) {
-        Mensagem mensagem = new Mensagem();
-
+        Mensagem msg = new Mensagem();
         Chamado chamado = chamadoService.buscarPorId(idChamado, idUsuario);
         Usuario usuario = usuarioService.buscarPorId(idUsuario);
-        System.out.println("AAAAAAAA");
 
         if (usuario.getCargo() != Cargo.SUPORTE && chamado.getStatus() == StatusChamada.AGUARDANDO_SUPORTE) {
-            throw new RuntimeException("Vez do cliente");
+            throw new RuntimeException("Vez do CLIENTE");
         }
         if (usuario.getCargo() != Cargo.CLIENTE && chamado.getStatus() == StatusChamada.AGUARDANDO_CLIENTE) {
-            throw new RuntimeException("Vez do suporte");
+            throw new RuntimeException("Vez do SUPORTE");
         }
-
-        if (usuario.getCargo() == Cargo.CLIENTE) {
-            chamado.setStatus(StatusChamada.AGUARDANDO_SUPORTE);
-        } else {
-            chamado.setStatus(StatusChamada.AGUARDANDO_CLIENTE);
-        }
-        mensagem.setUsuario(usuario);
-        mensagem.setChamado(chamado);
-        mensagem.setMensagem(texto);
-        mensagem.setData(LocalDateTime.now());
-
-        return mensagemRepository.save(mensagem);
+        //If ternario para receber o novo status do chamado com base no cargo CLIENTE
+        StatusChamada novoStatus = usuario.getCargo() == Cargo.CLIENTE ? StatusChamada.AGUARDANDO_SUPORTE : StatusChamada.AGUARDANDO_CLIENTE;
+        chamado.setStatus(novoStatus);
+        msg.setUsuario(usuario);
+        msg.setChamado(chamado);
+        msg.setMensagem(texto);
+        msg.setData(LocalDateTime.now());
+        return mensagemRepository.save(msg);
     }
 }
