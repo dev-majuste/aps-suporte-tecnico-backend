@@ -21,6 +21,16 @@ public class SseService {
         emitter.onTimeout(() -> emitters.remove(idUsuario));
 
         emitters.put(idUsuario, emitter);
+
+        try {
+            // Envia uma mensagem inicial para o navegador confirmar a conexão
+            emitter.send(SseEmitter.event()
+                    .name("notificacao")
+                    .data("{\"status\":\"conectado\"}"));
+        } catch (IOException e) {
+            emitters.remove(idUsuario);
+        }
+
         return emitter;
     }
 

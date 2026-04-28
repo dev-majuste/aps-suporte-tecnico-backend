@@ -17,6 +17,7 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+    @Column(unique = true)
     private String email;
     //Esse decorator impede que a senha apareça no Json quando buscar um usuario pela API, no caso ele permite apenas a escrita
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

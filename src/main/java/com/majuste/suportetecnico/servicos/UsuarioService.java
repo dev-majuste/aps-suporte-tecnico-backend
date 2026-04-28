@@ -30,6 +30,10 @@ public class UsuarioService {
 
     //Metodo para criar/salvar um novo usuario
     public Usuario salvar(Usuario usuario) {
+        boolean verificador = emailExiste(usuario.getEmail());
+        if (verificador) {
+            throw new RuntimeException("Este email ja foi utilizado");
+        }
         usuario.setCargo(Cargo.CLIENTE); //Ja seta o cargo de CLIENTE por padrao
         return usuarioRepository.save(usuario);
     }
@@ -37,6 +41,11 @@ public class UsuarioService {
     //Metodo para atualizar dados de um usuario
     public Usuario atualizarDados(Long idUsuario, Usuario novoUsuario) {
         Usuario usuario = buscarPorId(idUsuario);
+        //Verifica se o email ja esta sendo utilizado por outro usuario
+        if (emailExiste(novoUsuario.getEmail()) && !novoUsuario.getEmail().equals(usuario.getEmail())) {
+            throw new RuntimeException("Email ja esta sendo utilizado por outro usuario");
+        }
+
         usuario.setEmail(novoUsuario.getEmail());
         usuario.setNome(novoUsuario.getNome());
         usuario.setSenha(novoUsuario.getSenha());
@@ -56,4 +65,7 @@ public class UsuarioService {
 
     //Metodo para excluir um usuario
     public void remover(Long id) {usuarioRepository.deleteById(id);}
+
+    //Metodo para verificar se o email ja foi utilizado
+    public boolean emailExiste(String email) { return usuarioRepository.existsByEmail(email);}
 }

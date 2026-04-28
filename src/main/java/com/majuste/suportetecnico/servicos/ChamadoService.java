@@ -38,7 +38,7 @@ public class ChamadoService {
         Chamado chamado = chamadoRepository.findById(idChamado).orElseThrow(() -> new RuntimeException("Chamado não encontrado"));
         Usuario usuario = usuarioService.buscarPorId(idUsuario);
         //Verifica se o usuario é ADMIN ou SUPORTE, ou se o CLIENTE pertence ao chamado
-        if(usuario.getCargo() != Cargo.ADMIN && usuario.getCargo() != Cargo.SUPORTE && chamado.getCliente().getId().equals(usuario.getId())) {
+        if(usuario.getCargo() != Cargo.ADMIN && usuario.getCargo() != Cargo.SUPORTE && !chamado.getCliente().getId().equals(usuario.getId())) {
             throw new RuntimeException("Acesso negado");
         }
         return chamado;
