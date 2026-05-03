@@ -48,7 +48,9 @@ public class UsuarioService {
 
         usuario.setEmail(novoUsuario.getEmail());
         usuario.setNome(novoUsuario.getNome());
-        usuario.setSenha(novoUsuario.getSenha());
+        if(!novoUsuario.getSenha().isEmpty()) {
+            usuario.setSenha(novoUsuario.getSenha());
+        }
         return usuarioRepository.save(usuario);
     }
     //Metodo para atualizar o cargo de um usuario (metodo exclusivo de admin)
